@@ -16,11 +16,11 @@ text_to_speech.set_service_url('https://api.eu-gb.text-to-speech.watson.cloud.ib
 myConfig = { 
     "identity": {
         "orgId": "hj5fmy",
-        "typeId": "Device1",
-        "deviceId": "67890"
+        "typeId": "NodeMCU",
+        "deviceId": "12345"
     },
     "auth": {
-        "token": "87654321"
+        "token": "12345678"
     }
 }
 client = wiotp.sdk.device.DeviceClient(config=myConfig, logHandlers=None)
@@ -30,24 +30,19 @@ client.connect()
 def myCommandCallback(cmd):
     print("Message received from IBM IoT Platform: %s" % cmd.data['command'])
     m=cmd.data['command']
-    if(m=="lighton"):
-        print("Light is switched on")
-    elif(m=="lightoff"):
-         print("Light is switched OFF")
-while True:
-    #myData={'Face_detection': detect}
-    #client.publishEvent(eventId="status", msgFormat="json", data=myData, qos=0, onPublish=None)
-    client.commandCallback = myCommandCallback
-client.disconnect()
-
-with open('hello_world.mp3', 'wb') as audio_file:
+    with open('medicine.mp3', 'wb') as audio_file:
         audio_file.write(
             text_to_speech.synthesize(
                 'You have to take '+m+' medicine now',
                 voice='en-US_AllisonV3Voice',
                 accept='audio/mp3'        
             ).get_result().content)
-playsound.playsound('hello_world.mp3')
-os.remove('hello_world.mp3')
-    
+    playsound.playsound('medicine.mp3')
+    os.remove('medicine.mp3')
+while True:
+    #myData={'Face_detection': detect}
+    #client.publishEvent(eventId="status", msgFormat="json", data=myData, qos=0, onPublish=None)
+    client.commandCallback = myCommandCallback
+client.disconnect()
+
 
